@@ -31,8 +31,8 @@
             ],
             "tsConfig": "tsconfig.app.json",
             "assets": [
-              "src/favicon.ico",
-              "src/assets"
+              "src/img/entrega.ico",
+              "src/assets/img"
             ],
             "styles": [
               "src/styles.css"
@@ -90,8 +90,8 @@
             ],
             "tsConfig": "tsconfig.spec.json",
             "assets": [
-              "src/favicon.ico",
-              "src/assets"
+              "src/img/entrega.ico",
+              "src/assets/img"
             ],
             "styles": [
               "src/styles.css"

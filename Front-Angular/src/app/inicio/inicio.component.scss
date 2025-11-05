@@ -1,0 +1,11 @@
+.page-content-wrapper {
+  padding: 2.5rem; // Padding para desktop, igual al que antes tenía .content
+  flex: 1; // Para que ocupe el espacio disponible si es un flex item
+
+  // Ajustes responsive para este contenedor interno
+  @media (max-width: 768px) {
+    padding: 1.5rem; // Menos padding para móviles
+  }
+
+  // Puedes añadir más estilos específicos para el contenido de esta página aquí
+}
