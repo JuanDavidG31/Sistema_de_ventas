@@ -1,151 +1,212 @@
-# back/models.py
-
 from django.db import models
+from django.core.validators import MinValueValidator
 
-# --- 1. Modelos de Ubicación (Tablas Maestras) ---
+# --- Choices Fijos ---
+TIPO_PAGO_CHOICES = [
+    ('CONTADO', 'Contado'),
+    ('CREDITO', 'Crédito'),
+    ('MIXTO', 'Mixto'),
+]
+ESTADO_ACTIVO_CHOICES = [
+    ('ACTIVO', 'Activo'),
+    ('INACTIVO', 'Inactivo'),
+]
+TIPO_DOCUMENTO_CHOICES = [
+    ('CC', 'Cédula de Ciudadanía'),
+    ('NIT', 'Número de Identificación Tributaria'),
+    ('OTRO', 'Otro Documento'),
+]
+FORMA_PAGO_VENTA_CHOICES = [
+    ('CONTADO', 'Contado'),
+    ('CREDITO', 'Crédito'),
+]
+ESTADO_VENTA_CHOICES = [
+    ('COMPLETA', 'Completa'),
+    ('ANULADA', 'Anulada'),
+    ('PENDIENTE', 'Pendiente'),
+]
+ROL_USUARIO_CHOICES = [
+    ('ADMIN', 'Administrador'),
+    ('VENDEDOR', 'Vendedor'),
+    ('CONTADOR', 'Contador'),
+]
+
+
+# --- 1. Modelos de Ubicación ---
 
 class Departamento(models.Model):
-    # El campo _id (clave primaria en MongoDB) es añadido automáticamente por Djongo
+    # id_departamento PK (se crea automáticamente como 'id')
     nombre = models.CharField(max_length=100, unique=True, verbose_name="Nombre del Departamento")
     codigo = models.CharField(max_length=10, unique=True, verbose_name="Código Dpto")
     fecha_creacion = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        verbose_name = "Departamento"
-        verbose_name_plural = "Departamentos"
-        # Djongo usa este nombre para la colección en MongoDB
-        db_table = 'departamento' 
+        db_table = 'departamento'
 
     def __str__(self):
         return self.nombre
 
 class Municipio(models.Model):
+    # id_municipio PK (se crea automáticamente como 'id')
     nombre = models.CharField(max_length=100, verbose_name="Nombre del Municipio")
     codigo = models.CharField(max_length=10, unique=True, verbose_name="Código Mpio")
-    # Relación ForeignKey: Un Municipio pertenece a un Departamento
-    departamento = models.ForeignKey(Departamento, on_delete=models.PROTECT, verbose_name="Departamento")
+    
+    # FK -> DEPARTAMENTO (Relación 1 a N)
+    departamento = models.ForeignKey(
+        Departamento, 
+        on_delete=models.PROTECT, # No permite borrar el depto si tiene municipios
+        verbose_name="Departamento"
+    )
+    
     fecha_creacion = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        verbose_name = "Municipio"
-        verbose_name_plural = "Municipios"
         db_table = 'municipio' 
 
     def __str__(self):
         return f"{self.nombre} ({self.departamento.nombre})"
 
-# --- 2. Modelos de Productos ---
+# --- 2. Modelos de Clientes y Usuarios ---
 
-class LineaProducto(models.Model):
-    nombre = models.CharField(max_length=100, unique=True, verbose_name="Nombre de Línea")
-    descripcion = models.TextField(blank=True, null=True, verbose_name="Descripción")
-    
-    class Meta:
-        verbose_name = "Línea de Producto"
-        verbose_name_plural = "Líneas de Producto"
-        db_table = 'linea_producto'
-
-    def __str__(self):
-        return self.nombre
-
-class Producto(models.Model):
-    nombre = models.CharField(max_length=200, verbose_name="Nombre del Producto")
-    codigo = models.CharField(max_length=50, unique=True, verbose_name="Código de Producto")
-    valor_unitario = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Valor Unitario")
-    stock = models.IntegerField(default=0, verbose_name="Stock")
-    aplica_iva = models.BooleanField(default=True, verbose_name="Aplica IVA")
-    # Relación: Un Producto pertenece a una Línea
-    linea_producto = models.ForeignKey(LineaProducto, on_delete=models.PROTECT, verbose_name="Línea de Producto")
-
-    class Meta:
-        verbose_name = "Producto"
-        verbose_name_plural = "Productos"
-        db_table = 'producto'
-
-    def __str__(self):
-        return f"{self.nombre} ({self.codigo})"
-
-class ProductoImagen(models.Model):
-    # Este modelo podría ser el que maneje el almacenamiento de las URLs o IDs 
-    # de las imágenes en tu base de datos NoSQL externa (si usas GridFS o AWS S3, etc.)
-    producto = models.ForeignKey(Producto, on_delete=models.CASCADE, verbose_name="Producto")
-    url_imagen = models.URLField(max_length=500, verbose_name="URL de la Imagen")
-    es_principal = models.BooleanField(default=False, verbose_name="Imagen Principal")
-
-    class Meta:
-        verbose_name = "Imagen de Producto"
-        verbose_name_plural = "Imágenes de Producto"
-        db_table = 'producto_imagen'
-
-    def __str__(self):
-        return f"Imagen de {self.producto.nombre}"
-
-
-# --- 3. Modelos de Clientes y Usuarios ---
-
-class Cliente(models.Model):
-    TIPO_PAGO_CHOICES = [
-        ('CONTADO', 'Contado'),
-        ('CREDITO', 'Crédito'),
-        ('MIXTO', 'Mixto'),
-    ]
-    
-    nombre = models.CharField(max_length=200)
-    identificacion = models.CharField(max_length=20, unique=True)
-    direccion = models.CharField(max_length=255)
-    telefono = models.CharField(max_length=20)
-    email = models.EmailField(blank=True, null=True)
-    tipo_pago = models.CharField(max_length=10, choices=TIPO_PAGO_CHOICES, default='CONTADO')
-    municipio = models.CharField(max_length=100, verbose_name="Municipio de Residencia")
-
-    # <--- ¡NUEVOS CAMPOS AÑADIDOS! --->
-    tipo_documento = models.CharField(max_length=50, default='NIT', verbose_name="Tipo de Documento")
-    estado = models.CharField(max_length=50, default='Activo', verbose_name="Estado del Cliente")
-    # <-------------------------------->
-
-    class Meta:
-        verbose_name = "Cliente"
-        verbose_name_plural = "Clientes"
-        db_table = 'cliente'
-
-    def __str__(self):
-        return self.nombre
-
-# Django ya tiene un modelo 'User' para la autenticación, 
-# pero si necesitas un perfil de usuario propio:
 class Usuario(models.Model):
-    # Si quieres usar el sistema de autenticación de Django, usa:
-    # user = models.OneToOneField(User, on_delete=models.CASCADE)
-    nombre_completo = models.CharField(max_length=150)
-    rol = models.CharField(max_length=50, verbose_name="Rol en el Sistema") # Ej: Vendedor, Administrador
+    # id_usuario PK (se crea automáticamente como 'id')
+    username = models.CharField(max_length=50, unique=True)
+    email = models.EmailField(unique=True)
+    password_hash = models.CharField(max_length=128, verbose_name="Hash de Contraseña") 
+    rol = models.CharField(max_length=10, choices=ROL_USUARIO_CHOICES, default='VENDEDOR')
+    nombre_completo = models.CharField(max_length=255)
 
     class Meta:
-        verbose_name = "Usuario del Sistema"
-        verbose_name_plural = "Usuarios del Sistema"
         db_table = 'usuario'
 
     def __str__(self):
         return self.nombre_completo
 
 
+class Cliente(models.Model):
+    # id_cliente PK (se crea automáticamente como 'id')
+    nombre = models.CharField(max_length=200)
+    
+    # Nuevos campos del esquema detallado
+    tipo_documento = models.CharField(max_length=4, choices=TIPO_DOCUMENTO_CHOICES, default='CC') 
+    documento = models.CharField(max_length=20, unique=True, verbose_name="Documento/NIT") # De 'identificacion' a 'documento'
+    correo = models.EmailField(blank=True, null=True, verbose_name="Correo") 
+    telefono = models.CharField(max_length=20)
+    direccion = models.CharField(max_length=255)
+    
+    # FK -> MUNICIPIO (Relación 1 a N)
+    id_municipio = models.ForeignKey(
+        Municipio, 
+        on_delete=models.PROTECT, 
+        verbose_name="Municipio"
+    )
+    
+    tipo_pago = models.CharField(max_length=10, choices=TIPO_PAGO_CHOICES, default='CONTADO')
+    credito_maximo = models.DecimalField(
+        max_digits=10, 
+        decimal_places=2, 
+        default=0.00, 
+        validators=[MinValueValidator(0)]
+    )
+    estado = models.CharField(max_length=10, choices=ESTADO_ACTIVO_CHOICES, default='ACTIVO')
+
+    class Meta:
+        db_table = 'cliente'
+
+    def __str__(self):
+        return f"{self.nombre} ({self.documento})"
+
+
+# --- 3. Modelos de Productos ---
+
+class LineaProducto(models.Model):
+    # id_linea PK (se crea automáticamente como 'id')
+    nombre = models.CharField(max_length=100, unique=True, verbose_name="Nombre de Línea")
+    descripcion = models.TextField(blank=True, null=True, verbose_name="Descripción")
+    
+    class Meta:
+        db_table = 'linea_producto'
+
+    def __str__(self):
+        return self.nombre
+
+class Producto(models.Model):
+    # id_producto PK (se crea automáticamente como 'id')
+    codigo = models.CharField(max_length=50, unique=True, verbose_name="Código de Producto")
+    nombre = models.CharField(max_length=255, verbose_name="Nombre del Producto")
+    descripcion = models.TextField(blank=True, null=True)
+    
+    # FK -> LINEA_PRODUCTO (Relación 1 a N)
+    id_linea = models.ForeignKey(
+        LineaProducto, 
+        on_delete=models.PROTECT, 
+        verbose_name="Línea de Producto"
+    )
+    
+    precio_unitario = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(0)])
+    # Nuevo campo del esquema
+    iva_porcentaje = models.DecimalField(max_digits=5, decimal_places=2, default=0.00, validators=[MinValueValidator(0)]) 
+    # De 'stock' a 'stock_total'
+    stock_total = models.IntegerField(default=0, blank=True, null=True) 
+    estado = models.CharField(max_length=10, choices=ESTADO_ACTIVO_CHOICES, default='ACTIVO')
+    sku = models.CharField(max_length=50, blank=True, null=True)
+    # Nuevo campo JSON
+    opciones = models.JSONField(blank=True, null=True, default=dict, verbose_name="Atributos Extensibles (JSON)") 
+
+    class Meta:
+        db_table = 'producto'
+
+    def __str__(self):
+        return f"{self.nombre} ({self.codigo})"
+
+class ProductoImagen(models.Model):
+    # id_imagen PK (se crea automáticamente como 'id')
+    # FK -> PRODUCTO (Relación 1 a N)
+    id_producto = models.ForeignKey(
+        Producto, 
+        on_delete=models.CASCADE, # Si se borra el producto, borra la imagen
+        related_name='imagenes', 
+        verbose_name="Producto"
+    )
+    
+    url_almacenamiento = models.URLField(max_length=500)
+    # Nuevo campo JSON para NoSQL/Metadatos
+    metadata = models.JSONField(
+        blank=True, 
+        null=True, 
+        default=dict,
+        verbose_name="Tags, Variante, Metadata, etc."
+    )
+    # Se eliminó 'es_principal' para usar el campo 'metadata' si es necesario.
+
+    class Meta:
+        db_table = 'producto_imagen'
+
+    def __str__(self):
+        return f"Imagen de {self.id_producto.nombre}"
+
 # --- 4. Modelos de Ventas (Transacciones) ---
 
 class Venta(models.Model):
-    FORMA_PAGO_CHOICES = [
-        ('CONTADO', 'Contado'),
-        ('CREDITO', 'Crédito'),
-    ]
-
+    # id_venta PK (se crea automáticamente como 'id')
     numero_factura = models.CharField(max_length=50, unique=True, verbose_name="Número de Factura")
-    fecha_venta = models.DateTimeField(auto_now_add=True, verbose_name="Fecha y Hora")
-    cliente = models.ForeignKey(Cliente, on_delete=models.PROTECT, verbose_name="Cliente")
+    fecha_hora = models.DateTimeField(auto_now_add=True)
+    
+    # FK -> CLIENTE
+    id_cliente = models.ForeignKey(Cliente, on_delete=models.PROTECT, verbose_name="Cliente")
+    
+    forma_pago = models.CharField(max_length=10, choices=FORMA_PAGO_VENTA_CHOICES, default='CONTADO')
+    # Nuevos campos calculados
+    sub_total = models.DecimalField(max_digits=10, decimal_places=2, default=0.00, validators=[MinValueValidator(0)])
+    total_iva = models.DecimalField(max_digits=10, decimal_places=2, default=0.00, validators=[MinValueValidator(0)])
+    total_general = models.DecimalField(max_digits=10, decimal_places=2, default=0.00, validators=[MinValueValidator(0)])
+    
+    estado = models.CharField(max_length=10, choices=ESTADO_VENTA_CHOICES, default='PENDIENTE')
+    
+    # FK -> USUARIO
     usuario_vendedor = models.ForeignKey(Usuario, on_delete=models.PROTECT, verbose_name="Vendedor")
-    forma_pago = models.CharField(max_length=10, choices=FORMA_PAGO_CHOICES, default='CONTADO', verbose_name="Forma de Pago")
-    total_general = models.DecimalField(max_digits=12, decimal_places=2, default=0.00, verbose_name="Total General")
 
     class Meta:
-        verbose_name = "Venta"
-        verbose_name_plural = "Ventas"
         db_table = 'venta'
 
     def __str__(self):
@@ -153,20 +214,36 @@ class Venta(models.Model):
 
 
 class VentaDetalle(models.Model):
-    # Relación: Un detalle pertenece a una Venta
-    venta = models.ForeignKey(Venta, on_delete=models.CASCADE, related_name='detalles', verbose_name="Venta")
-    producto = models.ForeignKey(Producto, on_delete=models.PROTECT, verbose_name="Producto")
-    cantidad = models.IntegerField(verbose_name="Cantidad")
-    valor_unitario = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Valor Unitario de Venta")
-    porcentaje_iva = models.DecimalField(max_digits=5, decimal_places=2, default=0.19, verbose_name="Porcentaje IVA") # Ejemplo 19%
-    valor_total = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Valor Total Detalle")
+    # id_detalle PK (se crea automáticamente como 'id')
+    
+    # FK -> VENTA
+    id_venta = models.ForeignKey(
+        Venta, 
+        on_delete=models.CASCADE, 
+        related_name='detalles', # Permite acceder a los detalles desde la Venta: venta.detalles.all()
+        verbose_name="Venta"
+    )
+    
+    # FK -> PRODUCTO
+    id_producto = models.ForeignKey(
+        Producto, 
+        on_delete=models.PROTECT, 
+        verbose_name="Producto"
+    )
+    
+    codigo_producto = models.CharField(max_length=50, verbose_name="Código del Producto (Audit)") # Redundante
+    cantidad = models.IntegerField(validators=[MinValueValidator(1)])
+    valor_unitario = models.DecimalField(max_digits=10, decimal_places=2)
+    porcentaje_iva = models.DecimalField(max_digits=5, decimal_places=2)
+    
+    # Nuevos campos calculados
+    valor_sin_iva = models.DecimalField(max_digits=10, decimal_places=2)
+    valor_iva = models.DecimalField(max_digits=10, decimal_places=2)
+    valor_total = models.DecimalField(max_digits=10, decimal_places=2)
 
     class Meta:
-        verbose_name = "Detalle de Venta"
-        verbose_name_plural = "Detalles de Venta"
         db_table = 'venta_detalle'
-        # Esto asegura que no haya duplicados de producto en la misma venta, si lo deseas
-        unique_together = ('venta', 'producto') 
+        unique_together = ('id_venta', 'id_producto') 
 
     def __str__(self):
-        return f"{self.cantidad} x {self.producto.nombre} en Factura {self.venta.numero_factura}"
+        return f"{self.cantidad} x {self.id_producto.nombre} en Factura {self.id_venta.numero_factura}"
