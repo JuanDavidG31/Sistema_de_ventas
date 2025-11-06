@@ -32,6 +32,7 @@ class ProductoViewSet(viewsets.ModelViewSet):
     serializer_class = ProductoSerializer
 
 class ClienteViewSet(viewsets.ModelViewSet):
+    # Esto es todo lo que necesita. DRF se encarga del CRUD completo.
     queryset = Cliente.objects.all()
     serializer_class = ClienteSerializer
 
