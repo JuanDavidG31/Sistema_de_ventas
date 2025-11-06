@@ -89,7 +89,18 @@ class Cliente(models.Model):
     
     # Nuevos campos del esquema detallado
     tipo_documento = models.CharField(max_length=4, choices=TIPO_DOCUMENTO_CHOICES, default='CC') 
-    documento = models.CharField(max_length=20, unique=True, verbose_name="Documento/NIT") # De 'identificacion' a 'documento'
+    
+    # ********************************
+    # ¡LA CORRECCIÓN ESTÁ AQUÍ!
+    # ********************************
+    documento = models.CharField(
+        max_length=20, 
+        unique=True, 
+        blank=True,  # Permite que el campo esté vacío en el formulario/API
+        null=True,   # Permite almacenar NULL en la DB (Soluciona el error 11000 de Mongo)
+        verbose_name="Documento/NIT"
+    ) 
+    
     correo = models.EmailField(blank=True, null=True, verbose_name="Correo") 
     telefono = models.CharField(max_length=20)
     direccion = models.CharField(max_length=255)
