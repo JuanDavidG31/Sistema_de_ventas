@@ -12,7 +12,8 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 from decouple import config  
-
+import pymysql
+pymysql.install_as_MySQLdb()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -78,15 +79,28 @@ WSGI_APPLICATION = 'back_ventas.wsgi.application'
 
 
 DATABASES = {
+    # 1. Base de datos SQL (Principal/Relaciones) - Usaremos MySQL
+    # ¡Asegúrate de reemplazar los valores con tu configuración real de MySQL!
     'default': {
-        
-        #'ENGINE': 'django.db.backends.sqlite3',
-        #'NAME': BASE_DIR / 'db.sqlite3',
-        
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'jairoher_gr09', # Tu nombre de esquema/DB
+        'USER': 'jairoher_gr09',   # Tu usuario de DB
+        'PASSWORD': config('SQL_PASSWORD', default=config('SQL_URL')), # Usa `decouple` o .env
+        'HOST': 'jairoheredia.net.co', # Tu host de DB
+        'PORT': '3306', # Tu puerto de DB
+        # Opciones necesarias para MySQL
+        'OPTIONS': {
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+        }
+    },
+    
+    # 2. Base de datos NoSQL (Imágenes de Producto)
+    # Mantenemos tu configuración actual de djongo/MongoDB
+    'mongo_db': {
          'ENGINE': 'djongo',
-         'NAME': 'juguetes', 
+         'NAME': 'juguetes', # El nombre de tu DB en Mongo
          'CLIENT': {
-             'host': config('DATABASE_URL'),
+             'host': config('DATABASE_URL'), # La URL de conexión de MongoDB Atlas
          }
     }
 }
@@ -132,3 +146,4 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+DATABASE_ROUTERS = ['back.db_routers.MultiDBRouter']
