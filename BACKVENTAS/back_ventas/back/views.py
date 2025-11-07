@@ -2,7 +2,6 @@ from django.shortcuts import render
 
 
 from rest_framework import viewsets
-# Importa todos tus modelos y serializers
 from .models import (
     Departamento, Municipio, LineaProducto, Producto, 
     Cliente, ProductoImagen, Venta, VentaDetalle, Usuario
@@ -13,7 +12,7 @@ from .serializers import (
     VentaSerializer, VentaDetalleSerializer, UsuarioSerializer
 )
 
-# --- ViewSets para la API ---
+
 
 class DepartamentoViewSet(viewsets.ModelViewSet):
     queryset = Departamento.objects.all()
@@ -32,7 +31,7 @@ class ProductoViewSet(viewsets.ModelViewSet):
     serializer_class = ProductoSerializer
 
 class ClienteViewSet(viewsets.ModelViewSet):
-    # Esto es todo lo que necesita. DRF se encarga del CRUD completo.
+    
     queryset = Cliente.objects.all()
     serializer_class = ClienteSerializer
 

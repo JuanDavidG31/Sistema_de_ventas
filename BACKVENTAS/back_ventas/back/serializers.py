@@ -44,8 +44,7 @@ class UsuarioSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-# --- Serializers para Transacciones (Ventas) ---
-# (Estos pueden ser más complejos luego, pero para un CRUD básico empezamos así)
+
 
 class VentaDetalleSerializer(serializers.ModelSerializer):
     class Meta:
@@ -53,10 +52,9 @@ class VentaDetalleSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class VentaSerializer(serializers.ModelSerializer):
-    # Opcional: Si quieres ver los detalles DENTRO de la venta
-    # detalles = VentaDetalleSerializer(many=True, read_only=True) 
+   
     
     class Meta:
         model = Venta
         fields = '__all__'
-        # Si usas el opcional de arriba, añade 'detalles' a los fields
+       

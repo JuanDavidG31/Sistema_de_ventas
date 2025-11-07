@@ -14,17 +14,17 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-# back_ventas/urls.py (Modificado)
+
 
 from django.contrib import admin
-from django.urls import path, include  # <-- Asegúrate de importar 'include'
+from django.urls import path, include  
 
-# --- 1. Importaciones para drf-yasg (Swagger) ---
+
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 
-# --- 2. Configuración de la vista de Swagger ---
+#  Configuración de la vista de Swagger 
 schema_view = get_schema_view(
    openapi.Info(
       title="API Ventas Juguetes (BackVentas)",
@@ -33,19 +33,16 @@ schema_view = get_schema_view(
       contact=openapi.Contact(email="tu_email@proyecto.com"),
    ),
    public=True,
-   permission_classes=(permissions.AllowAny,), # Permite que cualquiera vea la doc
+   permission_classes=(permissions.AllowAny,), 
 )
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     
-    # --- 3. URL de tu API ---
-    # Todas las URLs de tu app 'back' estarán bajo 'api/v1/'
-    # Ejemplo: /api/v1/productos/
-    # Ejemplo: /api/v1/clientes/
+  
     path('api/v1/', include('back.urls')), 
     
-    # --- 4. URLs de la documentación ---
+    #   URLs de la documentación 
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
 ]

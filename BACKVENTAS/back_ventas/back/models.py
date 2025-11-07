@@ -1,7 +1,7 @@
 from django.db import models
 from django.core.validators import MinValueValidator
 
-# --- Choices Fijos ---
+
 TIPO_PAGO_CHOICES = [
     ('CONTADO', 'Contado'),
     ('CREDITO', 'Crédito'),
@@ -35,7 +35,7 @@ ROL_USUARIO_CHOICES = [
 # --- 1. Modelos de Ubicación ---
 
 class Departamento(models.Model):
-    # id_departamento PK (se crea automáticamente como 'id')
+    
     nombre = models.CharField(max_length=100, unique=True, verbose_name="Nombre del Departamento")
     codigo = models.CharField(max_length=10, unique=True, verbose_name="Código Dpto")
     fecha_creacion = models.DateTimeField(auto_now_add=True)
@@ -47,14 +47,14 @@ class Departamento(models.Model):
         return self.nombre
 
 class Municipio(models.Model):
-    # id_municipio PK (se crea automáticamente como 'id')
+    
     nombre = models.CharField(max_length=100, verbose_name="Nombre del Municipio")
     codigo = models.CharField(max_length=10, unique=True, verbose_name="Código Mpio")
     
     # FK -> DEPARTAMENTO (Relación 1 a N)
     departamento = models.ForeignKey(
         Departamento, 
-        on_delete=models.PROTECT, # No permite borrar el depto si tiene municipios
+        on_delete=models.PROTECT, 
         verbose_name="Departamento"
     )
     
@@ -69,7 +69,7 @@ class Municipio(models.Model):
 # --- 2. Modelos de Clientes y Usuarios ---
 
 class Usuario(models.Model):
-    # id_usuario PK (se crea automáticamente como 'id')
+    # id_usuario PK 
     username = models.CharField(max_length=50, unique=True)
     email = models.EmailField(unique=True)
     password_hash = models.CharField(max_length=128, verbose_name="Hash de Contraseña") 
@@ -84,20 +84,17 @@ class Usuario(models.Model):
 
 
 class Cliente(models.Model):
-    # id_cliente PK (se crea automáticamente como 'id')
+    # id_cliente PK 
     nombre = models.CharField(max_length=200)
     
-    # Nuevos campos del esquema detallado
+    
     tipo_documento = models.CharField(max_length=4, choices=TIPO_DOCUMENTO_CHOICES, default='CC') 
     
-    # ********************************
-    # ¡LA CORRECCIÓN ESTÁ AQUÍ!
-    # ********************************
     documento = models.CharField(
         max_length=20, 
         unique=True, 
-        blank=True,  # Permite que el campo esté vacío en el formulario/API
-        null=True,   # Permite almacenar NULL en la DB (Soluciona el error 11000 de Mongo)
+        blank=True,  
+        null=True,   
         verbose_name="Documento/NIT"
     ) 
     
@@ -131,7 +128,7 @@ class Cliente(models.Model):
 # --- 3. Modelos de Productos ---
 
 class LineaProducto(models.Model):
-    # id_linea PK (se crea automáticamente como 'id')
+    # id_linea PK 
     nombre = models.CharField(max_length=100, unique=True, verbose_name="Nombre de Línea")
     descripcion = models.TextField(blank=True, null=True, verbose_name="Descripción")
     
@@ -142,7 +139,7 @@ class LineaProducto(models.Model):
         return self.nombre
 
 class Producto(models.Model):
-    # id_producto PK (se crea automáticamente como 'id')
+    # id_producto PK 
     codigo = models.CharField(max_length=50, unique=True, verbose_name="Código de Producto")
     nombre = models.CharField(max_length=255, verbose_name="Nombre del Producto")
     descripcion = models.TextField(blank=True, null=True)
@@ -155,13 +152,13 @@ class Producto(models.Model):
     )
     
     precio_unitario = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(0)])
-    # Nuevo campo del esquema
+  
     iva_porcentaje = models.DecimalField(max_digits=5, decimal_places=2, default=0.00, validators=[MinValueValidator(0)]) 
-    # De 'stock' a 'stock_total'
+   
     stock_total = models.IntegerField(default=0, blank=True, null=True) 
     estado = models.CharField(max_length=10, choices=ESTADO_ACTIVO_CHOICES, default='ACTIVO')
     sku = models.CharField(max_length=50, blank=True, null=True)
-    # Nuevo campo JSON
+    
     opciones = models.JSONField(blank=True, null=True, default=dict, verbose_name="Atributos Extensibles (JSON)") 
 
     class Meta:
@@ -171,7 +168,7 @@ class Producto(models.Model):
         return f"{self.nombre} ({self.codigo})"
 
 class ProductoImagen(models.Model):
-    # id_imagen PK (se crea automáticamente como 'id')
+    # id_imagen PK 
     # FK -> PRODUCTO (Relación 1 a N)
     id_producto = models.ForeignKey(
         Producto, 
@@ -181,14 +178,13 @@ class ProductoImagen(models.Model):
     )
     
     url_almacenamiento = models.URLField(max_length=500)
-    # Nuevo campo JSON para NoSQL/Metadatos
+    
     metadata = models.JSONField(
         blank=True, 
         null=True, 
         default=dict,
         verbose_name="Tags, Variante, Metadata, etc."
     )
-    # Se eliminó 'es_principal' para usar el campo 'metadata' si es necesario.
 
     class Meta:
         db_table = 'producto_imagen'
@@ -196,10 +192,10 @@ class ProductoImagen(models.Model):
     def __str__(self):
         return f"Imagen de {self.id_producto.nombre}"
 
-# --- 4. Modelos de Ventas (Transacciones) ---
+# --- 4. Modelos de Ventas ---
 
 class Venta(models.Model):
-    # id_venta PK (se crea automáticamente como 'id')
+    # id_venta PK 
     numero_factura = models.CharField(max_length=50, unique=True, verbose_name="Número de Factura")
     fecha_hora = models.DateTimeField(auto_now_add=True)
     
@@ -207,7 +203,7 @@ class Venta(models.Model):
     id_cliente = models.ForeignKey(Cliente, on_delete=models.PROTECT, verbose_name="Cliente")
     
     forma_pago = models.CharField(max_length=10, choices=FORMA_PAGO_VENTA_CHOICES, default='CONTADO')
-    # Nuevos campos calculados
+    
     sub_total = models.DecimalField(max_digits=10, decimal_places=2, default=0.00, validators=[MinValueValidator(0)])
     total_iva = models.DecimalField(max_digits=10, decimal_places=2, default=0.00, validators=[MinValueValidator(0)])
     total_general = models.DecimalField(max_digits=10, decimal_places=2, default=0.00, validators=[MinValueValidator(0)])
@@ -225,13 +221,13 @@ class Venta(models.Model):
 
 
 class VentaDetalle(models.Model):
-    # id_detalle PK (se crea automáticamente como 'id')
+    # id_detalle PK 
     
     # FK -> VENTA
     id_venta = models.ForeignKey(
         Venta, 
         on_delete=models.CASCADE, 
-        related_name='detalles', # Permite acceder a los detalles desde la Venta: venta.detalles.all()
+        related_name='detalles', 
         verbose_name="Venta"
     )
     
@@ -247,7 +243,7 @@ class VentaDetalle(models.Model):
     valor_unitario = models.DecimalField(max_digits=10, decimal_places=2)
     porcentaje_iva = models.DecimalField(max_digits=5, decimal_places=2)
     
-    # Nuevos campos calculados
+    
     valor_sin_iva = models.DecimalField(max_digits=10, decimal_places=2)
     valor_iva = models.DecimalField(max_digits=10, decimal_places=2)
     valor_total = models.DecimalField(max_digits=10, decimal_places=2)
