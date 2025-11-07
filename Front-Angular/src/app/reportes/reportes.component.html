@@ -1,61 +1,39 @@
-<div class="table-container">
-  <h2>Listado de Elementos</h2>
+<div class="reportes-container">
 
-  <div class="filter-controls">
-    <input type="text" placeholder="Buscar..." [(ngModel)]="searchText" (input)="applyFilter()">
+  <h1>Reportes Estadísticos</h1>
 
-    <select [(ngModel)]="filterStatus" (change)="applyFilter()">
-      <option value="">Todos los Estados</option>
-      <option value="activo">Activo</option>
-      <option value="inactivo">Inactivo</option>
-      <option value="pendiente">Pendiente</option>
-    </select>
+  <div class="reportes-grid">
+
+    <!-- 6.1 Ventas por mes -->
+    <section class="section-box">
+      <h2>6.1 Ventas por mes</h2>
+      <div #ventasMesChart></div>
+    </section>
+
+    <!-- 6.2 Productos más vendidos -->
+    <section class="section-box">
+      <h2>6.2 Productos más vendidos</h2>
+      <div #productosVendidosChart></div>
+    </section>
+
+    <!-- 6.3 Ventas por departamento -->
+    <section class="section-box">
+      <h2>6.3 Ventas por departamento</h2>
+      <div #ventasDepartamentoChart></div>
+    </section>
+
+    <!-- 6.4 Ventas gravadas vs no gravadas -->
+    <section class="section-box">
+      <h2>6.4 Gravadas vs No Gravadas</h2>
+      <div #gravadasChart></div>
+    </section>
+
+    <!-- 6.5 Clientes según tipo de pago -->
+    <section class="section-box">
+      <h2>6.5 Tipo de pago de clientes</h2>
+      <div #tipoPagoChart></div>
+    </section>
+
   </div>
 
-  <div class="table-responsive">
-    <table>
-      <thead>
-      <tr>
-        <th>ID</th>
-        <th>Nombre</th>
-        <th>Descripción</th>
-        <th>Estado</th>
-        <th>Fecha</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr *ngFor="let item of paginatedData">
-        <td>{{ item.id }}</td>
-        <td>{{ item.name }}</td>
-        <td>{{ item.description }}</td>
-        <td>{{ item.status }}</td>
-        <td>{{ item.date | date:'shortDate' }}</td>
-      </tr>
-      <tr *ngIf="paginatedData.length === 0">
-        <td colspan="5" class="no-results">No se encontraron resultados.</td>
-      </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <div class="pagination-controls">
-    <div class="items-per-page">
-      Elementos por página:
-      <select [(ngModel)]="itemsPerPage" (change)="onItemsPerPageChange()">
-        <option [ngValue]="10">10</option>
-        <option [ngValue]="20">20</option>
-        <option [ngValue]="25">25</option>
-        <option [ngValue]="50">50</option>
-      </select>
-    </div>
-
-    <div class="pagination-info">
-      Página {{ currentPage }} de {{ totalPages }}
-    </div>
-
-    <div class="pagination-buttons">
-      <button (click)="prevPage()" [disabled]="currentPage === 1">Anterior</button>
-      <button (click)="nextPage()" [disabled]="currentPage === totalPages || totalPages === 0">Siguiente</button>
-    </div>
-  </div>
 </div>

@@ -12,8 +12,10 @@ import {DashboardLayoutComponent} from "./layouts/dashboard-layout/dashboard-lay
 import {AuthLayoutComponent} from "./layouts/auth-layout/auth-layout.component";
 import {ReportesComponent} from "./reportes/reportes.component";
 import { ProductosComponent } from './productos/productos.component';
-import { VentasComponent } from './resumen/ventas.component';
+import { VentasComponent } from './ventas/ventas.component';
 import { UsuariosComponent } from './usuarios/usuarios.component';
+import { CategoriasComponent } from './categorias/categorias.component';
+import { ClientesComponent } from './clientes/clientes.component';
 
 
 
@@ -28,7 +30,9 @@ import { UsuariosComponent } from './usuarios/usuarios.component';
     ReportesComponent,
     ProductosComponent,
     VentasComponent,
-    UsuariosComponent
+    UsuariosComponent,
+    CategoriasComponent,
+    ClientesComponent
   ],
   imports: [
     BrowserModule,

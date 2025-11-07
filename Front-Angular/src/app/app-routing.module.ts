@@ -6,8 +6,10 @@ import {InicioComponent} from "./inicio/inicio.component";
 import {DashboardLayoutComponent} from "./layouts/dashboard-layout/dashboard-layout.component";
 import {ReportesComponent} from "./reportes/reportes.component";
 import {ProductosComponent} from "./productos/productos.component";
-import {VentasComponent} from "./resumen/ventas.component";
+import {VentasComponent} from "./ventas/ventas.component";
 import {UsuariosComponent} from "./usuarios/usuarios.component";
+import {CategoriasComponent} from "./categorias/categorias.component";
+import {ClientesComponent} from "./clientes/clientes.component";
 
 let AuthLayoutComponent;
 const routes: Routes = [
@@ -30,6 +32,8 @@ const routes: Routes = [
       {path: 'productos', component: ProductosComponent },
       {path: 'ventas', component: VentasComponent },
       {path: 'crear', component: UsuariosComponent },
+      {path: 'categorias', component: CategoriasComponent },
+      {path: 'cliente', component: ClientesComponent },
       { path: '', redirectTo: 'inicio', pathMatch: 'full' }
     ]
   },
