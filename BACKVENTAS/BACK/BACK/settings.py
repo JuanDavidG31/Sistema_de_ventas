@@ -1,6 +1,8 @@
+from decouple import config # <-- NUEVA IMPORTACIÓN CORRECTA
 from pathlib import Path
 from datetime import timedelta
-
+import pymysql
+pymysql.install_as_MySQLdb()
 # RUTA BASE DEL PROYECTO
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -57,10 +59,21 @@ WSGI_APPLICATION = 'BACK.wsgi.application'
 
 # Base de datos (usa SQLite por ahora)
 DATABASES = {
+    
+    
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': config('SQL_NAME', default='ventas2025'), # Usa config() para obtener el nombre de la BD si lo deseas
+        'USER': config('SQL_USER', default='root'), 
+        'PASSWORD': config('SQL_PASSWORD'), # Obtenemos la contraseña del .env o variable de entorno
+        'HOST': config('SQL_HOST', default='5.tcp.ngrok.io'),
+        'PORT': config('SQL_PORT', default='29865'), 
+    },
+    
+    #'default': {
+    #    'ENGINE': 'django.db.backends.sqlite3',
+    #    'NAME': BASE_DIR / 'db.sqlite3',
+    #}
 }
 
 # Validadores de contraseñas

@@ -8,10 +8,11 @@ django = "*"
 djangorestframework = "*"
 djangorestframework-simplejwt = "*"
 drf-spectacular = "*"
-python-decouple = "*"
 django-cors-headers = "*"
 psycopg2-binary = "*"
 drf-yasg = "*"
+pymysql = "*"
+python-decouple = "*"
 
 [dev-packages]
 
