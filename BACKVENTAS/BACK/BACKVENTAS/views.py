@@ -1,4 +1,4 @@
-# views.py
+
 
 from rest_framework import viewsets, permissions
 from .models import (
@@ -58,7 +58,7 @@ class VentaDetalleViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
 class VentaViewSet(viewsets.ModelViewSet):
-    # Usar prefetch_related para cargar los detalles en una sola consulta
+    
     queryset = Venta.objects.prefetch_related('detalles').all()
     serializer_class = VentaSerializer
     permission_classes = [permissions.IsAuthenticated]

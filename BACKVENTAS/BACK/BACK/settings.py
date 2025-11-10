@@ -1,18 +1,18 @@
-from decouple import config # <-- NUEVA IMPORTACIÓN CORRECTA
+from decouple import config 
 from pathlib import Path
 from datetime import timedelta
 import pymysql
 pymysql.install_as_MySQLdb()
-# RUTA BASE DEL PROYECTO
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# SEGURIDAD
+
 SECRET_KEY = 'django-insecure-0jxsgm3u+cqz+u)zhl_of45f#*zw%d9$z-mfoq%7mptmn6wm9*'
 DEBUG = True
 
 ALLOWED_HOSTS = []
 
-# Aplicaciones instaladas
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -25,7 +25,7 @@ INSTALLED_APPS = [
     'rest_framework',
 ]
 
-# Middlewares necesarios para admin y autenticación
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -38,11 +38,10 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'BACK.urls'
 
-# Configuración de plantillas (necesaria para el admin)
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],  # si tienes una carpeta 'templates', pon su ruta aquí
+        'DIRS': [],  
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -57,15 +56,15 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'BACK.wsgi.application'
 
-# Base de datos (usa SQLite por ahora)
+# Base de datos
 DATABASES = {
     
     
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': config('SQL_NAME', default='ventas2025'), # Usa config() para obtener el nombre de la BD si lo deseas
+        'NAME': config('SQL_NAME', default='ventas2025'), 
         'USER': config('SQL_USER', default='root'), 
-        'PASSWORD': config('SQL_PASSWORD'), # Obtenemos la contraseña del .env o variable de entorno
+        'PASSWORD': config('SQL_PASSWORD'),
         'HOST': config('SQL_HOST', default='5.tcp.ngrok.io'),
         'PORT': config('SQL_PORT', default='29865'), 
     },
@@ -84,13 +83,13 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
-# Configuración regional
+
 LANGUAGE_CODE = 'es-co'
 TIME_ZONE = 'America/Bogota'
 USE_I18N = True
 USE_TZ = True
 
-# Archivos estáticos
+
 STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
