@@ -31,7 +31,7 @@ const routes: Routes = [
       {path: 'reportes', component: ReportesComponent },
       {path: 'productos', component: ProductosComponent },
       {path: 'ventas', component: VentasComponent },
-      {path: 'crear', component: UsuariosComponent },
+      {path: 'usuario', component: UsuariosComponent },
       {path: 'categorias', component: CategoriasComponent },
       {path: 'cliente', component: ClientesComponent },
       { path: '', redirectTo: 'inicio', pathMatch: 'full' }

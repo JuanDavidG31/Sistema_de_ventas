@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import {Router} from "@angular/router";
+import {PasswordService} from "./password.service";
 
 @Component({
   selector: 'app-password',
@@ -8,9 +9,12 @@ import {Router} from "@angular/router";
   styleUrl: './password.component.scss'
 })
 export class PasswordComponent {
+
+
   email: string = ''; // Variable para almacenar el correo electrónico
 
-  constructor(private router: Router) { } // Inyecta el Router
+  constructor(private router: Router, private passwordService: PasswordService) {
+  } // Inyecta el Router
 
   onSubmit(): void {
     // Aquí es donde implementarías la lógica para enviar el correo

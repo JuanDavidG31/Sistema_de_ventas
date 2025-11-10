@@ -12,7 +12,7 @@ h2 {
 }
 
 /* ------------------------------
-   SECCIÓN ENCABEZADO
+   5.1 ENCABEZADO DE VENTA
 --------------------------------*/
 .encabezado {
   background: #fafafa;
@@ -44,7 +44,7 @@ h2 {
 }
 
 /* ------------------------------
-   DETALLE DE PRODUCTOS
+   5.2 DETALLE DE PRODUCTOS
 --------------------------------*/
 .detalle {
   background: #ffffff;
@@ -62,9 +62,17 @@ h2 {
     }
   }
 
+  /* ✅ contenedor responsive de la tabla */
+  .tabla-responsive {
+    width: 100%;
+    overflow-x: auto;
+  }
+
   table {
     width: 100%;
     border-collapse: collapse;
+    min-width: 750px; /* ✅ evita que se aplaste en móvil */
+    margin-top: 10px;
 
     th {
       background: #f3f3f3;
@@ -94,7 +102,9 @@ h2 {
   }
 }
 
-
+/* ------------------------------
+   5.3 PIE DE VENTA
+--------------------------------*/
 .pie {
   background: #fafafa;
   padding: 15px;
@@ -130,12 +140,14 @@ h2 {
     margin-top: 20px;
     display: flex;
     gap: 15px;
+    flex-wrap: wrap;
+    justify-content: center;
   }
 }
-/* ---------------------------
-   BOTONES ESTILO UIVERSE
----------------------------- */
 
+/* ---------------------------
+   BOTONES UIVERSE
+---------------------------- */
 .acciones {
   display: flex;
   justify-content: center;
@@ -159,17 +171,14 @@ h2 {
     overflow: hidden;
   }
 
-  /* Azul - Finalizar */
   .btn-finalizar {
     background: seagreen;
   }
 
-  /* Naranja - Cancelar */
   .btn-cancelar {
-    background: #D43619;
+    background: #d43619;
   }
 
-  /* Hover animado blanco */
   button:hover {
     color: #000;
   }
@@ -192,16 +201,31 @@ h2 {
   }
 }
 
-/* Responsive */
-@media (max-width: 600px) {
-  .acciones {
-    flex-direction: column;
-    align-items: center;
+/* ---------------------------
+      RESPONSIVE
+---------------------------- */
+@media (max-width: 900px) {
+  .encabezado .form-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
 
-    .btn-finalizar,
-    .btn-cancelar {
-      width: 100%;
-      max-width: 250px;
-    }
+  .pie .resumen-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .encabezado .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .pie .resumen-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .acciones .btn-finalizar,
+  .acciones .btn-cancelar {
+    width: 100%;
+    max-width: 260px;
   }
 }

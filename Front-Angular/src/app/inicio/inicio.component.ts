@@ -1,5 +1,6 @@
 import { Component, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import ApexCharts from 'apexcharts';
+import {InicioService} from "./inicio.service";
 
 @Component({
   selector: 'app-inicio',
@@ -7,6 +8,9 @@ import ApexCharts from 'apexcharts';
   styleUrls: ['./inicio.component.scss']
 })
 export class InicioComponent implements AfterViewInit {
+
+  constructor(private inicioService : InicioService) {}
+
 
   @ViewChild('chart') chartElement!: ElementRef;
 

@@ -2,14 +2,14 @@
   <div class="sidebar-overlay" [ngClass]="{ 'active': sidebarOpen }" (click)="toggleSidebar()"></div>
 
   <aside class="sidebar" [ngClass]="{ 'open': sidebarOpen }">
-    <div class="logo">Gestiónix</div>
+    <div routerLink="/inicio" routerLinkActive="active" style="cursor: pointer" class="logo">Gestiónix</div>
     <nav>
       <a routerLink="/inicio" routerLinkActive="active">Inicio</a>
       <a routerLink="/productos" routerLinkActive="active">Productos</a>
       <a routerLink="/categorias" routerLinkActive="active">Categorias</a>
       <a routerLink="/ventas" routerLinkActive="active">Ventas</a>
       <a routerLink="/reportes" routerLinkActive="active">Reportes</a>
-      <a routerLink="/crear" routerLinkActive="active">Crear Usuarios</a>
+      <a routerLink="/usuario" routerLinkActive="active">Crear Usuarios</a>
       <a routerLink="/cliente" routerLinkActive="active">Clientes</a>
       <a routerLink="/login" routerLinkActive="active">Salir</a>
     </nav>
