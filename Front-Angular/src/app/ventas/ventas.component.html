@@ -9,7 +9,7 @@
     <div class="form-row">
       <div class="form-group">
         <label>Fecha y hora</label>
-        <input type="text" [value]="fechaActual" readonly />
+        <input type="text" [value]="fechaActual" readonly/>
       </div>
 
       <div class="form-group">
@@ -28,7 +28,7 @@
 
       <div class="form-group">
         <label>Número de factura</label>
-        <input type="text" [value]="numeroFactura" readonly />
+        <input type="text" [value]="numeroFactura" readonly/>
       </div>
 
       <div class="form-group">
@@ -62,47 +62,49 @@
     </div>
 
     <!-- Tabla dinámica -->
-    <table>
-      <thead>
-      <tr>
-        <th>Código</th>
-        <th>Nombre</th>
-        <th>Cantidad</th>
-        <th>V. Unitario</th>
-        <th>IVA %</th>
-        <th>Antes IVA</th>
-        <th>IVA</th>
-        <th>Total</th>
-        <th></th>
-      </tr>
-      </thead>
+    <div class="tabla-responsive">
+      <table>
+        <thead>
+        <tr>
+          <th>Código</th>
+          <th>Nombre</th>
+          <th>Cantidad</th>
+          <th>V. Unitario</th>
+          <th>IVA %</th>
+          <th>Antes IVA</th>
+          <th>IVA</th>
+          <th>Total</th>
+          <th></th>
+        </tr>
+        </thead>
 
-      <tbody>
-      <tr *ngFor="let item of carrito; let i = index">
-        <td>{{ item.codigo }}</td>
-        <td>{{ item.nombre }}</td>
+        <tbody>
+        <tr *ngFor="let item of carrito; let i = index">
+          <td>{{ item.codigo }}</td>
+          <td>{{ item.nombre }}</td>
 
-        <td>
-          <input
-            type="number"
-            min="1"
-            [(ngModel)]="item.cantidad"
-            (input)="cambiarCantidad(i)"
-          />
-        </td>
+          <td>
+            <input
+              type="number"
+              min="1"
+              [(ngModel)]="item.cantidad"
+              (input)="cambiarCantidad(i)"
+            />
+          </td>
 
-        <td>{{ item.valorUnitario | currency }}</td>
-        <td>{{ item.iva }}%</td>
-        <td>{{ item.valorAntesIva | currency }}</td>
-        <td>{{ item.valorIva | currency }}</td>
-        <td>{{ item.totalLinea | currency }}</td>
+          <td>{{ item.valorUnitario | currency }}</td>
+          <td>{{ item.iva }}%</td>
+          <td>{{ item.valorAntesIva | currency }}</td>
+          <td>{{ item.valorIva | currency }}</td>
+          <td>{{ item.totalLinea | currency }}</td>
 
-        <td>
-          <button class="eliminar" (click)="eliminarItem(i)">✖</button>
-        </td>
-      </tr>
-      </tbody>
-    </table>
+          <td>
+            <button class="eliminar" (click)="eliminarItem(i)">✖</button>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
   </section>
 
   <!-- ===========================

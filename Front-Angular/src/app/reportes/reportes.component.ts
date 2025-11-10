@@ -1,12 +1,35 @@
-import { Component, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  ViewChild,
+  AfterViewInit,
+  OnDestroy
+} from '@angular/core';
 import ApexCharts from 'apexcharts';
+import { ReportesService } from './reportes.service';
 
 @Component({
   selector: 'app-reportes',
   templateUrl: './reportes.component.html',
   styleUrls: ['./reportes.component.scss']
 })
-export class ReportesComponent implements AfterViewInit {
+export class ReportesComponent implements AfterViewInit, OnDestroy {
+
+  // Guardamos todas las instancias para poder destruirlas
+  private charts: ApexCharts[] = [];
+
+  constructor(private reportesService: ReportesService) {
+
+    // Fix del error "Unable to preventDefault inside passive event listener"
+    (window as any).Apex = {
+      chart: {
+        events: {
+          touchMove: () => {},
+          mouseMove: () => {}
+        }
+      }
+    };
+  }
 
   @ViewChild('ventasMesChart') ventasMesChart!: ElementRef;
   @ViewChild('productosVendidosChart') productosVendidosChart!: ElementRef;
@@ -15,6 +38,8 @@ export class ReportesComponent implements AfterViewInit {
   @ViewChild('tipoPagoChart') tipoPagoChart!: ElementRef;
 
   ngAfterViewInit(): void {
+    console.log("INIT REPORTES");
+
     this.cargarVentasMes();
     this.cargarProductosVendidos();
     this.cargarVentasDepartamento();
@@ -22,19 +47,61 @@ export class ReportesComponent implements AfterViewInit {
     this.cargarTipoPago();
   }
 
-  // 6.1 Ventas por mes
+  ngOnDestroy(): void {
+    console.log("DESTRUYENDO CHARTS");
+
+    this.charts.forEach(chart => {
+      try {
+        chart.destroy();
+      } catch {}
+    });
+
+    this.charts = [];
+  }
+
+  // ================================
+  //    6.1 Ventas por mes
+  // ================================
   cargarVentasMes() {
     const options = {
-      chart: { type: 'line', height: 330 },
+      chart: {
+        type: 'line',
+        height: 330,
+        zoom: { enabled: false },
+        toolbar: { show: false },
+        events: {
+          mounted: (chart: { el: HTMLElement }) => {
+            const svg = chart.el.querySelector('svg');
+            if (svg instanceof SVGSVGElement) {
+              svg.addEventListener(
+                'wheel',
+                (e: WheelEvent) => {
+                  e.preventDefault();
+                },
+                { passive: false }
+              );
+            }
+          }
+
+        }
+      },
       series: [{ name: 'Ventas', data: [45, 60, 80, 75, 95, 110] }],
       xaxis: { categories: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun'] },
       stroke: { curve: 'smooth' }
     };
 
-    new ApexCharts(this.ventasMesChart.nativeElement, options).render();
+    setTimeout(() => {
+      const chart = new ApexCharts(this.ventasMesChart.nativeElement, options);
+      chart.render();
+      this.charts.push(chart);
+    }, 50);
   }
 
-  // 6.2 Productos más vendidos
+
+
+  // ================================
+  //    6.2 Productos más vendidos
+  // ================================
   cargarProductosVendidos() {
     const options = {
       chart: { type: 'bar', height: 330 },
@@ -42,10 +109,17 @@ export class ReportesComponent implements AfterViewInit {
       xaxis: { categories: ['Oso', 'Carro', 'Puzzle', 'Construcción'] }
     };
 
-    new ApexCharts(this.productosVendidosChart.nativeElement, options).render();
+    const chart = new ApexCharts(
+      this.productosVendidosChart.nativeElement,
+      options
+    );
+    chart.render();
+    this.charts.push(chart);
   }
 
-  // 6.3 Ventas por departamento
+  // ================================
+  //    6.3 Ventas por departamento
+  // ================================
   cargarVentasDepartamento() {
     const options = {
       chart: { type: 'bar', height: 330 },
@@ -53,10 +127,17 @@ export class ReportesComponent implements AfterViewInit {
       xaxis: { categories: ['Antioquia', 'Valle', 'Cundinamarca', 'Santander'] }
     };
 
-    new ApexCharts(this.ventasDepartamentoChart.nativeElement, options).render();
+    const chart = new ApexCharts(
+      this.ventasDepartamentoChart.nativeElement,
+      options
+    );
+    chart.render();
+    this.charts.push(chart);
   }
 
-  // 6.4 Gravadas vs no gravadas
+  // ================================
+  //    6.4 Gravadas vs no gravadas
+  // ================================
   cargarGravadas() {
     const options = {
       chart: { type: 'pie', height: 330 },
@@ -64,10 +145,14 @@ export class ReportesComponent implements AfterViewInit {
       labels: ['Gravadas', 'No Gravadas']
     };
 
-    new ApexCharts(this.gravadasChart.nativeElement, options).render();
+    const chart = new ApexCharts(this.gravadasChart.nativeElement, options);
+    chart.render();
+    this.charts.push(chart);
   }
 
-  // 6.5 Tipo de pago de clientes
+  // ================================
+  //    6.5 Tipo de pago
+  // ================================
   cargarTipoPago() {
     const options = {
       chart: { type: 'donut', height: 330 },
@@ -75,6 +160,11 @@ export class ReportesComponent implements AfterViewInit {
       labels: ['Efectivo', 'Tarjeta', 'Transferencia']
     };
 
-    new ApexCharts(this.tipoPagoChart.nativeElement, options).render();
+    const chart = new ApexCharts(
+      this.tipoPagoChart.nativeElement,
+      options
+    );
+    chart.render();
+    this.charts.push(chart);
   }
 }

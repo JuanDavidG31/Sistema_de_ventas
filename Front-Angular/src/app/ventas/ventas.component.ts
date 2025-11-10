@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import {VentasService} from "./ventas.service";
 
 @Component({
   selector: 'app-ventas',
@@ -6,6 +7,9 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./ventas.component.scss']
 })
 export class VentasComponent implements OnInit {
+
+
+
 
   // Encabezado
   fechaActual: string = '';
@@ -26,7 +30,7 @@ export class VentasComponent implements OnInit {
   totalIva: number = 0;
   totalGeneral: number = 0;
 
-  constructor() {}
+  constructor(private ventasService: VentasService) {}
 
   ngOnInit(): void {
     // Inicializaciones mínimas

@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import {UsuariosService} from "./usuarios.service";
 
 @Component({
   selector: 'app-usuarios',
@@ -6,6 +7,10 @@ import { Component } from '@angular/core';
   styleUrl: './usuarios.component.scss'
 })
 export class UsuariosComponent {
+
+  constructor(private usuariosService: UsuariosService) {}
+
+
   show1 = false;
   show2 = false;
   show3 = false;
