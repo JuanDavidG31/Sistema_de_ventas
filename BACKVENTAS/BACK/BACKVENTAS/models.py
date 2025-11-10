@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.postgres.fields import JSONField  # si usas Django < 4.2 o Postgres-specific; en Django reciente: models.JSONField
+from django.contrib.postgres.fields import JSONField  
 from django.utils import timezone
 
 class Departamento(models.Model):
@@ -23,7 +23,7 @@ class Usuario(models.Model):
     ROLE_CHOICES = (('ADMIN','ADMIN'), ('VENDEDOR','VENDEDOR'), ('CONTADOR','CONTADOR'))
     username = models.CharField(max_length=50, unique=True)
     email = models.EmailField(unique=True)
-    password_hash = models.CharField(max_length=128)  # gestiona hashing fuera del modelo (o usa AbstractUser)
+    password_hash = models.CharField(max_length=128)  
     rol = models.CharField(max_length=10, choices=ROLE_CHOICES)
     nombre_completo = models.CharField(max_length=255)
 
@@ -65,7 +65,7 @@ class Producto(models.Model):
     stock_total = models.IntegerField()
     estado = models.CharField(max_length=10)
     sku = models.CharField(max_length=50, blank=True, null=True)
-    opciones = models.JSONField(default=dict, blank=True)  # usa JSONField (Postgres JSONB es ideal). :contentReference[oaicite:8]{index=8}
+    opciones = models.JSONField(default=dict, blank=True)  
 
     def __str__(self):
         return f"{self.nombre} ({self.codigo})"
@@ -104,7 +104,7 @@ class VentaDetalle(models.Model):
     valor_total = models.DecimalField(max_digits=10, decimal_places=2)
 
     class Meta:
-        unique_together = ('venta', 'producto')  # evita duplicar el mismo producto en una factura
+        unique_together = ('venta', 'producto')  
 
     def __str__(self):
         return f"{self.venta.numero_factura} - {self.producto.codigo}"

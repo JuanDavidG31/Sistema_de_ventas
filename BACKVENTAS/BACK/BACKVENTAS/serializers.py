@@ -1,4 +1,4 @@
-# serializers.py
+
 
 from rest_framework import serializers
 from .models import (
@@ -21,7 +21,7 @@ class MunicipioSerializer(serializers.ModelSerializer):
 class UsuarioSerializer(serializers.ModelSerializer):
     class Meta:
         model = Usuario
-        # Nota: ¡No expongas el password_hash en un serializer de lectura!
+        
         fields = ['id', 'username', 'email', 'rol', 'nombre_completo'] 
 
 # --- Serializers de Clientes y Productos ---
@@ -42,7 +42,7 @@ class ProductoImagenSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class ProductoSerializer(serializers.ModelSerializer):
-    # Agregamos los detalles de las imágenes anidadas para lectura
+  
     imagenes = ProductoImagenSerializer(many=True, read_only=True) 
     class Meta:
         model = Producto
@@ -56,7 +56,7 @@ class VentaDetalleSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class VentaSerializer(serializers.ModelSerializer):
-    # Agregamos los detalles de la venta anidados para lectura
+    
     detalles = VentaDetalleSerializer(many=True, read_only=True) 
     class Meta:
         model = Venta
