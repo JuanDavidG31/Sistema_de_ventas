@@ -76,6 +76,9 @@ DATABASES = {
         'PASSWORD': config('SQL_PASSWORD'),
         'HOST': config('SQL_HOST', default='5.tcp.ngrok.io'),
         'PORT': config('SQL_PORT', default='29865'), 
+        'ATOMIC_REQUESTS': False, 
+        'AUTOCOMMIT': True, 
+        'CONN_MAX_AGE': None,
     },
     
     'mongo_db': {
@@ -83,8 +86,13 @@ DATABASES = {
         'NAME': 'juguetes', 
         'CLIENT': {
             'host': config('DATABASE_URL'),
-        }
+        },
+        'ATOMIC_REQUESTS': False, 
+        'AUTOCOMMIT': True, 
+        'CONN_MAX_AGE': None,
     }
+    
+   
 }
 
 # Validadores de contraseñas
