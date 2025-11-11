@@ -46,7 +46,7 @@ class ProductoViewSet(viewsets.ModelViewSet):
     #permission_classes = [permissions.IsAuthenticated]
 
 class ProductoImagenViewSet(viewsets.ModelViewSet):
-    queryset = ProductoImagen.objects.all()
+    queryset = ProductoImagen.objects.using('mongo_db').all()
     serializer_class = ProductoImagenSerializer
     #permission_classes = [permissions.IsAuthenticated]
 
