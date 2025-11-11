@@ -7,9 +7,9 @@ import { Router, NavigationEnd } from '@angular/router';
   styleUrls: ['./dashboard-layout.component.scss']
 })
 export class DashboardLayoutComponent {
-  user='pedro'
-  sidebarOpen = false;
 
+  sidebarOpen = false;
+  user = localStorage.getItem("name");
   constructor(private router: Router) {
     // Cierra la sidebar al navegar a otra ruta
     this.router.events.subscribe(event => {

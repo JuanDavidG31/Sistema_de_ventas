@@ -12,6 +12,7 @@ export class InicioComponent implements AfterViewInit {
   constructor(private inicioService : InicioService) {}
 
 
+
   @ViewChild('chart') chartElement!: ElementRef;
 
   @ViewChild('radarChart') radarChartElement!: ElementRef;
