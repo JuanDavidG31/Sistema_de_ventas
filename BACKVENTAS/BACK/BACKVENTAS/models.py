@@ -69,10 +69,9 @@ class Producto(models.Model):
         return f"{self.nombre} ({self.codigo})"
 
 class ProductoImagen(models.Model):
-    producto = models.ForeignKey(Producto, on_delete=models.CASCADE, related_name='imagenes')
+    producto = models.ForeignKey('Producto', on_delete=models.CASCADE, related_name='imagenes') 
     url_almacenamiento = models.URLField()
     
-
     def __str__(self):
         return f"Imagen {self.id} - {self.producto.codigo}"
 

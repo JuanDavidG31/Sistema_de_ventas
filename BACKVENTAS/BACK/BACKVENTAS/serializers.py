@@ -37,6 +37,7 @@ class LineaProductoSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class ProductoImagenSerializer(serializers.ModelSerializer):
+    
     class Meta:
         model = ProductoImagen
         fields = '__all__'
