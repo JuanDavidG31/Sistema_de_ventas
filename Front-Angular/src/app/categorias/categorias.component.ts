@@ -10,6 +10,11 @@ export class CategoriasComponent {
 
   constructor(private categoriasService: CategoriasService) {}
 
+  nombre:any='';
+  descripcion:any='';
+  eNombre:any='';
+  eDescripcion:any='';
+
   show1 = false;
   show2 = false;
   show3 = false;

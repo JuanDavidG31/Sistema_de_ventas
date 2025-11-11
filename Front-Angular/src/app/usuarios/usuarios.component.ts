@@ -10,6 +10,15 @@ export class UsuariosComponent {
 
   constructor(private usuariosService: UsuariosService) {}
 
+  nombreCompleto:any='';
+  correo:any='';
+  contrasena:any='';
+  rol:any='';
+  estado:any='';
+  eNombreCompleto:any='';
+  eCorreo:any='';
+  eRol:any='';
+  eEstado:any='';
 
   show1 = false;
   show2 = false;

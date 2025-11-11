@@ -1,6 +1,5 @@
 import {Component} from '@angular/core';
 import {InicioService} from "../inicio/inicio.service";
-import {AuthService} from "../guards/auth.service";
 import {Router} from "@angular/router";
 
 @Component({
@@ -10,18 +9,25 @@ import {Router} from "@angular/router";
   styleUrl: './login.component.scss'
 })
 export class LoginComponent {
-   username:string='';
-   password: string='';
+  username: string = '';
+  password: string = '';
 
-  constructor(private inicioService: InicioService, private auth: AuthService, private router: Router) {
+  constructor(private inicioService: InicioService, private router: Router) {
   }
+
   login() {
-    this.auth.login(this.username, this.password).subscribe({
-      next: () => this.router.navigate(['/inicio']),
-      error: () => {
-        console.log('Error');
-      }
-    });
+    if (!this.username && !this.password) {
+      alert('Los campos no pueden estar vacios');
+
+    }else {
+      alert('Bienvenido ' + this.username);
+      // @ts-ignore
+      localStorage.setItem("name",this.username);
+
+      this.router.navigate(['/inicio']);
+    }
+
+
   }
 
 }

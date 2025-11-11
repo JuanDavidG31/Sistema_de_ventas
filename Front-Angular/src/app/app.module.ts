@@ -41,11 +41,11 @@ import {TokenInterceptor} from "./interceptors/token.interceptor";
     AppRoutingModule,
     HttpClientModule
   ],
-  providers: [  {
+  providers: [  /*{
     provide: HTTP_INTERCEPTORS,
     useClass: TokenInterceptor,
     multi: true
-  }],
+  }*/],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
