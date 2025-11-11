@@ -63,47 +63,47 @@
   <section *ngIf="show22" class="section-box">
     <h2>Crear producto</h2>
 
-    <form class="form-grid">
+    <form class="form-grid" (ngSubmit)="crearProducto()">
 
       <div>
         <label>Código</label>
-        <input type="text">
+        <input type="text" [(ngModel)]="codigo" name="cod">
       </div>
 
       <div>
         <label>Nombre</label>
-        <input type="text">
+        <input type="text" [(ngModel)]="nombre" name="nombre">
       </div>
 
       <div class="grid-full">
         <label>Descripción</label>
-        <textarea rows="3"></textarea>
+        <textarea rows="3" [(ngModel)]="descripcion" name="descripcion"></textarea>
       </div>
 
       <div>
         <label>Stock</label>
-        <input type="number">
+        <input type="number" [(ngModel)]="stock" name="stock">
       </div>
 
       <div>
         <label>Precio base</label>
-        <input type="number">
+        <input type="number" [(ngModel)]="precioBase" name="pBase">
       </div>
 
       <div>
         <label>Porcentaje de IVA</label>
-        <input type="number">
+        <input type="number" [(ngModel)]="porcentaje" name="iva">
       </div>
 
       <div>
         <label>Línea de producto</label>
-        <select>
-          <option>Juguetes suaves</option>
-          <option>Juegos de mesa</option>
-          <option>Construcción</option>
-          <option>Videojuegos</option>
+        <select [(ngModel)]="categoria">
+          <option *ngFor="let cat of categoria" [value]="cat.id">
+            {{ cat.nombre }}
+          </option>
         </select>
       </div>
+
 
       <div class="grid-full">
         <label>Imagen</label>

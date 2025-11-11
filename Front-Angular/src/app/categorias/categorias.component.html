@@ -17,6 +17,7 @@
     <table class="line-table">
       <thead>
       <tr>
+        <th>Id</th>
         <th>Nombre</th>
         <th>Descripción</th>
         <th>Acciones</th>
@@ -24,20 +25,22 @@
       </thead>
 
       <tbody>
-      <tr>
-        <td>Juguetes Suaves</td>
-        <td>Peluche, cojines, muñecos suaves</td>
+      <tr *ngFor="let linea of categorias">
+        <td>{{ linea.id }}</td>
+        <td>{{ linea.nombre }}</td>
+        <td>{{ linea.descripcion }}</td>
         <td>
-          <button class="edit-btn">Editar</button>
-          <button class="delete-btn">Eliminar</button>
+          <button class="edit-btn" (click)="editarLinea(linea)">Editar</button>
+          <button class="delete-btn"(click)="seleccionarLinea(linea)">Eliminar</button>
         </td>
       </tr>
 
       <tr>
-        <td colspan="3" class="new-line">
-          <button class="create-btn">Crear nueva línea</button>
+        <td colspan="4" class="new-line">
+          <button class="create-btn" (click)="toggle(2)">Crear nueva línea</button>
         </td>
       </tr>
+
       </tbody>
     </table>
 
@@ -47,19 +50,19 @@
   <section *ngIf="show2" class="section-box">
     <h2>3.2 Crear línea</h2>
 
-    <form class="form-grid">
+    <form class="form-grid" (ngSubmit)="crearLinea()">
 
       <div class="grid-full">
         <label>Nombre de la línea</label>
-        <input type="text">
+        <input type="text" [(ngModel)]="nombre" name="nombre">
       </div>
 
       <div class="grid-full">
         <label>Descripción (opcional)</label>
-        <textarea rows="3"></textarea>
+        <textarea rows="3" [(ngModel)]="descrip" name="descripcion"></textarea>
       </div>
 
-      <button class="save-btn">Guardar línea</button>
+      <button type="submit" class="save-btn">Guardar línea</button>
 
     </form>
   </section>
@@ -70,16 +73,16 @@
 
     <p class="info-text">Los datos aparecen precargados de la línea seleccionada.</p>
 
-    <form class="form-grid">
+    <form class="form-grid" (ngSubmit)="actualizarLinea()">
 
       <div class="grid-full">
         <label>Nombre de la línea</label>
-        <input type="text" value="Juguetes Suaves">
+        <input type="text" [(ngModel)]="eNombre" name="eName">
       </div>
 
       <div class="grid-full">
         <label>Descripción</label>
-        <textarea rows="3">Peluche, cojines, muñecos suaves</textarea>
+        <textarea rows="3" [(ngModel)]="eDescripcion" name="eDescripcion"></textarea>
       </div>
 
       <button class="save-btn">Guardar cambios</button>
@@ -95,8 +98,8 @@
       <p>¿Estás seguro que deseas eliminar esta línea de producto?</p>
 
       <div class="btn-row">
-        <button class="danger-btn">Eliminar</button>
-        <button class="cancel-btn">Cancelar</button>
+        <button class="danger-btn" (click)="eliminarCategoria()">Eliminar</button>
+        <button class="cancel-btn" (click)="toggle(1)">Cancelar</button>
       </div>
     </div>
 

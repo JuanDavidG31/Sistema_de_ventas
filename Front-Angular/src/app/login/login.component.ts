@@ -16,7 +16,7 @@ export class LoginComponent {
   }
 
   login() {
-    if (!this.username && !this.password) {
+    if (!this.username || !this.password) {
       alert('Los campos no pueden estar vacios');
 
     }else {
