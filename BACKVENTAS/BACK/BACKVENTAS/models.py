@@ -64,8 +64,6 @@ class Producto(models.Model):
     iva_porcentaje = models.DecimalField(max_digits=5, decimal_places=2)
     stock_total = models.IntegerField()
     estado = models.CharField(max_length=10)
-    sku = models.CharField(max_length=50, blank=True, null=True)
-    opciones = models.JSONField(default=dict, blank=True)  
 
     def __str__(self):
         return f"{self.nombre} ({self.codigo})"
