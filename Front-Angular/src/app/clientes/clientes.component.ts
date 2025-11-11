@@ -11,6 +11,20 @@ export class ClientesComponent implements OnInit{
   constructor(private clientesService: ClientesService) {}
 
 departamentos:any[]=[];
+  nombre:any='';
+  tipoId:any='';
+  numeroId:any='';
+  direccion:any='';
+  telefono:any='';
+  correo:any='';
+  tipoPago:any='';
+  eNombre:any='';
+  eTipoId:any='';
+  eNumeroId:any='';
+  eDireccion:any='';
+  eTelefono:any='';
+  eCorreo:any='';
+  eTipoPago:any='';
 
   ngOnInit(): void {
     this.cargarDepartamentos();
