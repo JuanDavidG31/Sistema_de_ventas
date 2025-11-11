@@ -6,13 +6,14 @@ name = "pypi"
 [packages]
 django = "*"
 djangorestframework = "*"
-djangorestframework-simplejwt = "*"
 drf-spectacular = "*"
 django-cors-headers = "*"
 psycopg2-binary = "*"
 drf-yasg = "*"
 pymysql = "*"
 python-decouple = "*"
+djongo = "==1.3.6"
+djangorestframework-simplejwt = "*"
 
 [dev-packages]
 

@@ -1,4 +1,4 @@
-
+from rest_framework.permissions import IsAuthenticated, AllowAny # 🚨 ¡Faltaba importar AllowAny!
 
 from rest_framework import viewsets, permissions
 from .models import (
@@ -26,8 +26,20 @@ class MunicipioViewSet(viewsets.ModelViewSet):
 class UsuarioViewSet(viewsets.ModelViewSet):
     queryset = Usuario.objects.all()
     serializer_class = UsuarioSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
+    
+    # Sobreescribir el método get_permissions para aplicar reglas diferentes por acción
+    def get_permissions(self):
+        """
+        Instancia y devuelve la lista de permisos que esta vista requiere.
+        """
+        # Si la acción es 'create' (POST /api/usuarios/), permitir acceso público (AllowAny)
+        if self.action == 'create':
+            permission_classes = [AllowAny]
+        # Para todas las demás acciones (list, retrieve, update, destroy), requerir autenticación
+        else:
+            permission_classes = [IsAuthenticated]
+            
+        return [permission() for permission in permission_classes]
 # --- ViewSets de Clientes y Productos ---
 
 class ClienteViewSet(viewsets.ModelViewSet):

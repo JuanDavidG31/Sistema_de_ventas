@@ -1,4 +1,5 @@
 from decouple import config 
+from datetime import timedelta
 from pathlib import Path
 from datetime import timedelta
 import pymysql
@@ -11,8 +12,32 @@ SECRET_KEY = 'django-insecure-0jxsgm3u+cqz+u)zhl_of45f#*zw%d9$z-mfoq%7mptmn6wm9*
 DEBUG = True
 
 ALLOWED_HOSTS = []
+SIMPLE_JWT = {
+    # Tiempo de vida del token de acceso (ej: 5 minutos)
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60), 
+    
+    # ⚠️ Desactivar refresh token (no lo incluiremos en el endpoint)
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1), # Aunque no se usará, debe estar presente
 
-
+    # Permite al usuario iniciar sesión con cualquier campo de User, no solo username
+    'AUTH_HEADER_TYPES': ('Bearer',),
+    'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
+    
+    # Si quisieras que el login también devuelva los datos del usuario:
+    'USER_ID_FIELD': 'id',
+    'USER_ID_CLAIM': 'user_id',
+}
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        # Añade la autenticación JWT como método principal
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        # Opcional: Autenticación de sesión para el admin/swagger
+        'rest_framework.authentication.SessionAuthentication', 
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    )
+}
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -69,10 +94,13 @@ DATABASES = {
         'PORT': config('SQL_PORT', default='29865'), 
     },
     
-    #'default': {
-    #    'ENGINE': 'django.db.backends.sqlite3',
-    #    'NAME': BASE_DIR / 'db.sqlite3',
-    #}
+    'mongo_db': {
+        'ENGINE': 'djongo',
+        'NAME': 'juguetes', 
+        'CLIENT': {
+            'host': config('DATABASE_URL'),
+        }
+    }
 }
 
 # Validadores de contraseñas
@@ -93,3 +121,5 @@ USE_TZ = True
 STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+DATABASE_ROUTERS = ['BACKVENTAS.router.ImageDBRouter']
