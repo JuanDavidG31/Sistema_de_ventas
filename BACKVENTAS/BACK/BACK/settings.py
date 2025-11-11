@@ -78,10 +78,13 @@ DATABASES = {
         'PORT': config('SQL_PORT', default='29865'), 
     },
     
-    #'default': {
-    #    'ENGINE': 'django.db.backends.sqlite3',
-    #    'NAME': BASE_DIR / 'db.sqlite3',
-    #}
+    'mongo_db': {
+        'ENGINE': 'djongo',
+        'NAME': 'juguetes', 
+        'CLIENT': {
+            'host': config('DATABASE_URL'),
+        }
+    }
 }
 
 # Validadores de contraseñas
