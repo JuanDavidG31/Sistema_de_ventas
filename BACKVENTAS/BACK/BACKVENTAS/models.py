@@ -23,7 +23,7 @@ class Usuario(models.Model):
     ROLE_CHOICES = (('ADMIN','ADMIN'), ('VENDEDOR','VENDEDOR'), ('CONTADOR','CONTADOR'))
     username = models.CharField(max_length=50, unique=True)
     email = models.EmailField(unique=True)
-    password_hash = models.CharField(max_length=128)  
+    #password_hash = models.CharField(max_length=128)  
     rol = models.CharField(max_length=10, choices=ROLE_CHOICES)
     nombre_completo = models.CharField(max_length=255)
 
