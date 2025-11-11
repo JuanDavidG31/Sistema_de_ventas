@@ -70,9 +70,16 @@ class Producto(models.Model):
 
 class ProductoImagen(models.Model):
     producto = models.ForeignKey('Producto', on_delete=models.CASCADE, related_name='imagenes') 
-    url_almacenamiento = models.URLField()
     
+    imagen = models.ImageField(
+        upload_to='productos/imagenes/',  
+        null=True, 
+        blank=True
+    )
+    
+
     def __str__(self):
+        
         return f"Imagen {self.id} - {self.producto.codigo}"
 
 class Venta(models.Model):

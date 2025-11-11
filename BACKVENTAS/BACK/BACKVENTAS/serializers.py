@@ -40,7 +40,7 @@ class ProductoImagenSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = ProductoImagen
-        fields = '__all__'
+        fields = ['id', 'producto', 'imagen']
 
 class ProductoSerializer(serializers.ModelSerializer):
   

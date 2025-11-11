@@ -13,6 +13,7 @@ drf-yasg = "*"
 pymysql = "*"
 python-decouple = "*"
 django = "*"
+pillow = "*"
 
 [dev-packages]
 

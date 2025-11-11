@@ -2,11 +2,13 @@ from decouple import config
 from pathlib import Path
 from datetime import timedelta
 import pymysql
+from pathlib import Path
 pymysql.install_as_MySQLdb()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
+MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_URL = '/media/'
 SECRET_KEY = 'django-insecure-0jxsgm3u+cqz+u)zhl_of45f#*zw%d9$z-mfoq%7mptmn6wm9*'
 DEBUG = True
 CORS_ALLOW_ALL_ORIGINS = True
