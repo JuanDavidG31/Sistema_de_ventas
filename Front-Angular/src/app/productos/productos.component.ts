@@ -27,7 +27,7 @@ export class ProductosComponent {
   imagen: any[] = [];
 
   ngOnInit(): void {
-    //this.cargarCategorias();
+    this.cargarCategorias();
    // this.cargarProducto();
   }
 
@@ -40,7 +40,7 @@ export class ProductosComponent {
         this.cargarProducto();
       }
     });
-  }
+  }*/
   cargarCategorias() {
     this.productosService.getCategorias().subscribe({
       next: (data) => {
@@ -76,7 +76,7 @@ export class ProductosComponent {
       }
     });
   }
-*/
+
   toggle(section: number) {
 
     // Primero ocultar todas

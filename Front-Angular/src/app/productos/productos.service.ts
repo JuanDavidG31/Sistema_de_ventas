@@ -5,7 +5,7 @@ import {map, Observable, tap} from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class ProductosService {/*
+export class ProductosService {
   private apiUrl = 'http://127.0.0.1:8000/api/productos/';
   private apiUrlCat = 'http://127.0.0.1:8000/api/lineasproducto/';
 
@@ -14,9 +14,9 @@ export class ProductosService {/*
   crearProducto(data: any): Observable<any> {
     return this.http.post(this.apiUrl, data);
   }
-  getProducto(): Observable<any> {
+/* getProducto(): Observable<any> {
     return this.http.get(this.apiUrl);
-  }
+  }*/
   getCategorias(): Observable<any> {
     return this.http.get(this.apiUrlCat);
   }
@@ -26,5 +26,5 @@ export class ProductosService {/*
   eliminarProducto(id: number) {
     return this.http.delete(`${this.apiUrl}${id}/`);
   }
-*/
+
 }
