@@ -10,6 +10,7 @@ import {VentasComponent} from "./ventas/ventas.component";
 import {UsuariosComponent} from "./usuarios/usuarios.component";
 import {CategoriasComponent} from "./categorias/categorias.component";
 import {ClientesComponent} from "./clientes/clientes.component";
+import {AuthGuard} from "./guards/auth.guard";
 
 let AuthLayoutComponent;
 const routes: Routes = [
@@ -25,20 +26,21 @@ const routes: Routes = [
   {
     path: '',
     component: DashboardLayoutComponent,
-    // canActivate: [AuthGuard],
+    canActivate: [AuthGuard],
     children: [
       { path: 'inicio', component: InicioComponent },
-      {path: 'reportes', component: ReportesComponent },
-      {path: 'productos', component: ProductosComponent },
-      {path: 'ventas', component: VentasComponent },
-      {path: 'usuario', component: UsuariosComponent },
-      {path: 'categorias', component: CategoriasComponent },
-      {path: 'cliente', component: ClientesComponent },
+      { path: 'reportes', component: ReportesComponent },
+      { path: 'productos', component: ProductosComponent },
+      { path: 'ventas', component: VentasComponent },
+      { path: 'usuario', component: UsuariosComponent },
+      { path: 'categorias', component: CategoriasComponent },
+      { path: 'cliente', component: ClientesComponent },
       { path: '', redirectTo: 'inicio', pathMatch: 'full' }
     ]
   },
   { path: '**', redirectTo: 'login' }
 ];
+
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

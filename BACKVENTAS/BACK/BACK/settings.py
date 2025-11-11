@@ -9,6 +9,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'django-insecure-0jxsgm3u+cqz+u)zhl_of45f#*zw%d9$z-mfoq%7mptmn6wm9*'
 DEBUG = True
+CORS_ALLOW_ALL_ORIGINS = True
+
 
 ALLOWED_HOSTS = []
 
@@ -23,10 +25,12 @@ INSTALLED_APPS = [
     'drf_yasg',  
     'BACKVENTAS',
     'rest_framework',
+    'corsheaders',
 ]
 
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -35,13 +39,18 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+CORS_ALLOW_HEADERS = [
+    "authorization",
+    "content-type",
+]
+
 
 ROOT_URLCONF = 'BACK.urls'
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],  
+        'DIRS': ['0.0.0.0/0'],  
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

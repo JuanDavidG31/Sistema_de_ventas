@@ -5,7 +5,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import {LoginComponent} from "./login/login.component";
 import {FormsModule} from "@angular/forms";
-import {HttpClientModule} from "@angular/common/http";
+import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {PasswordComponent} from "./password/password.component";
 import {InicioComponent} from "./inicio/inicio.component";
 import {DashboardLayoutComponent} from "./layouts/dashboard-layout/dashboard-layout.component";
@@ -16,6 +16,7 @@ import { VentasComponent } from './ventas/ventas.component';
 import { UsuariosComponent } from './usuarios/usuarios.component';
 import { CategoriasComponent } from './categorias/categorias.component';
 import { ClientesComponent } from './clientes/clientes.component';
+import {TokenInterceptor} from "./interceptors/token.interceptor";
 
 
 
@@ -40,7 +41,11 @@ import { ClientesComponent } from './clientes/clientes.component';
     AppRoutingModule,
     HttpClientModule
   ],
-  providers: [],
+  providers: [  {
+    provide: HTTP_INTERCEPTORS,
+    useClass: TokenInterceptor,
+    multi: true
+  }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
