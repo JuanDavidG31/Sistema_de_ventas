@@ -1,9 +1,9 @@
 asgiref==3.7.2
 attrs==23.2.0
 certifi==2024.8.30
-cffi==1.16.0
+cffi>=1.17.0        # versión compatible con Python 3.12
 cloudinary==1.44.1
-cryptography==42.0.5
+cryptography>=43.0.0 # versiones nuevas corrigen soporte Python 3.12
 Django==3.2.25
 django-aesfield==4.0.0
 django-appconf==1.0.6
