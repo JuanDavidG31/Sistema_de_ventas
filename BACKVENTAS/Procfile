@@ -1,1 +1,1 @@
-web: gunicorn BACKVENTAS.BACK.wsgi
+web: gunicorn BACKVENTAS.wsgi
