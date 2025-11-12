@@ -1,5 +1,5 @@
 
-
+from .utils import upload_to_cloudinary
 from rest_framework import serializers
 from .models import (
     Departamento, Municipio, Usuario, Cliente, LineaProducto, 
@@ -38,9 +38,38 @@ class LineaProductoSerializer(serializers.ModelSerializer):
 
 class ProductoImagenSerializer(serializers.ModelSerializer):
     
+    imagen_file = serializers.FileField(
+        write_only=True, 
+        required=True, 
+        label="Archivo de Imagen a Subir"
+    )
+    
+    
+    imagen_url = serializers.URLField(read_only=True)
+    
     class Meta:
         model = ProductoImagen
-        fields = ['id', 'producto', 'imagen']
+       
+        fields = ['id', 'producto', 'imagen_url', 'imagen_file']
+        
+    def create(self, validated_data):
+        imagen_file = validated_data.pop('imagen_file')
+        
+        producto_instance = validated_data['producto']
+        
+     
+        try:
+            url_cloudinary = upload_to_cloudinary(imagen_file, producto_instance.id)
+        except Exception as e:
+            raise serializers.ValidationError(f"Error al subir a Cloudinary: {e}")
+
+     
+        validated_data['imagen_url'] = url_cloudinary
+        
+        
+        producto_imagen = ProductoImagen.objects.create(**validated_data)
+        
+        return producto_imagen
 
 class ProductoSerializer(serializers.ModelSerializer):
   

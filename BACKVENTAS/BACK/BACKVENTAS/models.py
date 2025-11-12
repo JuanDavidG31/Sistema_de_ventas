@@ -71,13 +71,16 @@ class Producto(models.Model):
 class ProductoImagen(models.Model):
     producto = models.ForeignKey('Producto', on_delete=models.CASCADE, related_name='imagenes') 
     
-    imagen = models.ImageField(
-        upload_to='productos/imagenes/',  
+   
+    imagen_url = models.URLField(
+        max_length=500, 
         null=True, 
-        blank=True
+        blank=True,
+        verbose_name="URL de Imagen Cloudinary"
     )
     
-
+    
+    
     def __str__(self):
         
         return f"Imagen {self.id} - {self.producto.codigo}"
