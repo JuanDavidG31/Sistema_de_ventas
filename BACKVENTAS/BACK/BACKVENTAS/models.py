@@ -69,8 +69,11 @@ class Producto(models.Model):
         return f"{self.nombre} ({self.codigo})"
 
 class ProductoImagen(models.Model):
-    producto = models.ForeignKey('Producto', on_delete=models.CASCADE, related_name='imagenes') 
-    
+
+    producto_id = models.IntegerField(
+        db_index=True, 
+        verbose_name="ID de Producto (MySQL)"
+    )
    
     imagen_url = models.URLField(
         max_length=500, 
@@ -79,11 +82,8 @@ class ProductoImagen(models.Model):
         verbose_name="URL de Imagen Cloudinary"
     )
     
-    
-    
     def __str__(self):
-        
-        return f"Imagen {self.id} - {self.producto.codigo}"
+        return f"Imagen {self.id} - Producto ID {self.producto_id}"
 
 class Venta(models.Model):
     numero_factura = models.CharField(max_length=50, unique=True)

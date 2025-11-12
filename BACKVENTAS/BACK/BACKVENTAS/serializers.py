@@ -38,10 +38,10 @@ class LineaProductoSerializer(serializers.ModelSerializer):
 
 class ProductoImagenSerializer(serializers.ModelSerializer):
    
-    producto = serializers.PrimaryKeyRelatedField(
-        queryset=Producto.objects.all(), 
+    producto = serializers.IntegerField(
+        write_only=True, 
         source='producto_id', 
-        write_only=True
+        label="ID del Producto"
     )
     
     imagen_file = serializers.FileField(
@@ -54,17 +54,25 @@ class ProductoImagenSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = ProductoImagen
-        fields = ['id', 'producto', 'imagen_url', 'imagen_file']
-        
+     
+        fields = ['id', 'producto', 'imagen_url', 'imagen_file', 'producto_id']
+        read_only_fields = ['producto_id'] 
+
     def create(self, validated_data):
         imagen_file = validated_data.pop('imagen_file')
         
-       
-        producto_id = validated_data['producto_id'] 
+        producto_id_int = validated_data.get('producto_id') 
+
+        try:
+            Producto.objects.using('default').get(id=producto_id_int)
+        except Producto.DoesNotExist:
+            raise serializers.ValidationError({"producto": f"El producto con ID {producto_id_int} no existe."})
+        except Exception as e:
+            raise serializers.ValidationError({"producto": f"Error al verificar el producto: {e}"})
 
        
         try:
-             url_cloudinary = upload_to_cloudinary(imagen_file, producto_id)
+             url_cloudinary = upload_to_cloudinary(imagen_file, producto_id_int)
         except Exception as e:
             raise serializers.ValidationError({"imagen_file": f"Error al subir a Cloudinary: {e}"})
 
@@ -77,10 +85,18 @@ class ProductoImagenSerializer(serializers.ModelSerializer):
 
 class ProductoSerializer(serializers.ModelSerializer):
   
-    imagenes = ProductoImagenSerializer(many=True, read_only=True) 
+    imagenes = serializers.SerializerMethodField() 
+    
     class Meta:
         model = Producto
         fields = '__all__'
+
+    def get_imagenes(self, obj):
+        
+        imagenes_qs = ProductoImagen.objects.using('mongo_db').filter(producto_id=obj.id)
+        
+   
+        return ProductoImagenSerializer(imagenes_qs, many=True, read_only=True, context=self.context).data
 
 # --- Serializers de Venta ---
 
