@@ -14,7 +14,7 @@ DEBUG = True
 CORS_ALLOW_ALL_ORIGINS = True
 
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['https://sistema-de-ventas-uumw.onrender.com']
 
 
 INSTALLED_APPS = [
