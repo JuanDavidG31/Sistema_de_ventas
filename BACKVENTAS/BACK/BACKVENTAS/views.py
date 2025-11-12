@@ -1,5 +1,6 @@
 
-
+from drf_yasg.utils import swagger_auto_schema
+from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework import viewsets, permissions
 from .models import (
     Departamento, Municipio, Usuario, Cliente, LineaProducto, 
@@ -48,6 +49,17 @@ class ProductoViewSet(viewsets.ModelViewSet):
 class ProductoImagenViewSet(viewsets.ModelViewSet):
     queryset = ProductoImagen.objects.using('mongo_db').all()
     serializer_class = ProductoImagenSerializer
+    
+    parser_classes = (MultiPartParser, FormParser,) 
+    
+  
+    @swagger_auto_schema(
+        operation_description="Sube una imagen para un producto específico.",
+        request_body=ProductoImagenSerializer, 
+        consumes=['multipart/form-data'] 
+    )
+    def create(self, request, *args, **kwargs):
+        return super().create(request, *args, **kwargs)
     #permission_classes = [permissions.IsAuthenticated]
 
 # --- ViewSets de Venta ---

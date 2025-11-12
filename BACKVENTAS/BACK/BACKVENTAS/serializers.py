@@ -1,4 +1,4 @@
-
+from .models import ProductoImagen, Producto
 from .utils import upload_to_cloudinary
 from rest_framework import serializers
 from .models import (
@@ -37,6 +37,12 @@ class LineaProductoSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class ProductoImagenSerializer(serializers.ModelSerializer):
+   
+    producto = serializers.PrimaryKeyRelatedField(
+        queryset=Producto.objects.all(), 
+        source='producto_id', 
+        write_only=True
+    )
     
     imagen_file = serializers.FileField(
         write_only=True, 
@@ -44,30 +50,28 @@ class ProductoImagenSerializer(serializers.ModelSerializer):
         label="Archivo de Imagen a Subir"
     )
     
-    
     imagen_url = serializers.URLField(read_only=True)
     
     class Meta:
         model = ProductoImagen
-       
         fields = ['id', 'producto', 'imagen_url', 'imagen_file']
         
     def create(self, validated_data):
         imagen_file = validated_data.pop('imagen_file')
         
-        producto_instance = validated_data['producto']
-        
-     
-        try:
-            url_cloudinary = upload_to_cloudinary(imagen_file, producto_instance.id)
-        except Exception as e:
-            raise serializers.ValidationError(f"Error al subir a Cloudinary: {e}")
+       
+        producto_id = validated_data['producto_id'] 
 
-     
+       
+        try:
+             url_cloudinary = upload_to_cloudinary(imagen_file, producto_id)
+        except Exception as e:
+            raise serializers.ValidationError({"imagen_file": f"Error al subir a Cloudinary: {e}"})
+
         validated_data['imagen_url'] = url_cloudinary
         
         
-        producto_imagen = ProductoImagen.objects.create(**validated_data)
+        producto_imagen = ProductoImagen.objects.using('mongo_db').create(**validated_data)
         
         return producto_imagen
 
