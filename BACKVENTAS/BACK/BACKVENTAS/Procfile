@@ -1,2 +1,3 @@
 web: gunicorn BACK.BACK.wsgi
 
+web: gunicorn BACK.wsgi
