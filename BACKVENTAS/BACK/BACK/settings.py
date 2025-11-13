@@ -132,5 +132,5 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATIC_URL = '/static/' 
 
 STATICFILES_DIRS = [
-    # BASE_DIR / "static", # Descomentar si tienes una carpeta 'static' propia
+    # BASE_DIR / "static",
 ]
