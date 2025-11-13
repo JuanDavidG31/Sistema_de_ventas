@@ -48,6 +48,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 CORS_ALLOW_HEADERS = [
     "authorization",
@@ -120,8 +121,15 @@ USE_I18N = True
 USE_TZ = True
 
 
-STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 DATABASE_ROUTERS = ['BACKVENTAS.router.ImageDBRouter']
+
+STATIC_ROOT = BASE_DIR / 'staticfiles' 
+
+STATIC_URL = '/static/' 
+
+STATICFILES_DIRS = [
+    # BASE_DIR / "static", # Descomentar si tienes una carpeta 'static' propia
+]
