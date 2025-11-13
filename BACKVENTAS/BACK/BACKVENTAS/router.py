@@ -1,5 +1,3 @@
-# BACKVENTAS/router.py
-# (Si tu archivo router.py no existe, créalo con este contenido)
 
 class ImageDBRouter:
     """
@@ -32,35 +30,36 @@ class ImageDBRouter:
         Aquí está la CLAVE para solucionar tu ValueError.
         """
         
-        # 1. Obtenemos los nombres de los modelos
         model1_name = obj1._meta.model_name
         model2_name = obj2._meta.model_name
         
-        # 2. Verificamos la relación específica Producto <-> ProductoImagen
-        # Si la relación es entre Producto (default) y ProductoImagen (mongo_db)
+        
         if (model1_name == 'producto' and model2_name == 'productoimagen') or \
            (model1_name == 'productoimagen' and model2_name == 'producto'):
-            # Permite esta relación de clave foránea cruzada.
-            # Nota: Esto solo permite la relación, el acceso requerirá más lógica si no usas .id
+           
             return True
 
-        # 3. Regla general: Si los modelos están en la misma base de datos, la relación está permitida
         db1 = self.db_for_read(obj1)
         db2 = self.db_for_read(obj2)
         
         if db1 and db2 and db1 == db2:
             return True
         
-        # 4. Evitar relaciones cruzadas no manejadas explícitamente
         return False
 
-    def allow_migrate(self, db, app_label, model_name=None, **hints):
+def allow_migrate(self, db, app_label, model_name=None, **hints):
         """
         Asegura que solo se creen las tablas en la base de datos correcta.
         """
-        if app_label == 'BACKVENTAS' and model_name == 'productoimagen':
-            # El modelo ProductoImagen sólo se migra a 'mongo_db'
+        if model_name == 'productoimagen':
             return db == 'mongo_db'
+
+        if app_label == 'BACKVENTAS':
+            return db == 'default'
+
+       
+        if db == 'mongo_db':
+            return False 
+
         
-        # Todos los demás modelos (incluido Producto) solo se migran a 'default'
         return db == 'default'

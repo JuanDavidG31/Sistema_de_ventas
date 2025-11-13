@@ -37,7 +37,10 @@ class LineaProductoSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class ProductoImagenSerializer(serializers.ModelSerializer):
+    
    
+    _id = serializers.CharField(read_only=True) 
+    
     producto = serializers.IntegerField(
         write_only=True, 
         source='producto_id', 
@@ -47,24 +50,26 @@ class ProductoImagenSerializer(serializers.ModelSerializer):
     imagen_file = serializers.FileField(
         write_only=True, 
         required=True, 
-        label="Archivo de Imagen a Subir"
+        label="Archivo..."
     )
-    
-    imagen_url = serializers.URLField(read_only=True)
     
     class Meta:
         model = ProductoImagen
-     
-        fields = ['id', 'producto', 'imagen_url', 'imagen_file', 'producto_id']
-        read_only_fields = ['producto_id'] 
+        
+        fields = ['_id', 'producto', 'imagen_file', 'imagen_url'] 
+        read_only_fields = ['imagen_url']
 
     def create(self, validated_data):
-        imagen_file = validated_data.pop('imagen_file')
         
-        producto_id_int = validated_data.get('producto_id') 
-
+        
+        
+        producto_id_int = validated_data.get('producto_id')
+        imagen_file = validated_data.pop('imagen_file') 
+        
+       
+       
         try:
-            Producto.objects.using('default').get(id=producto_id_int)
+            Producto.objects.using('default').get(pk=producto_id_int)
         except Producto.DoesNotExist:
             raise serializers.ValidationError({"producto": f"El producto con ID {producto_id_int} no existe."})
         except Exception as e:
@@ -78,7 +83,7 @@ class ProductoImagenSerializer(serializers.ModelSerializer):
 
         validated_data['imagen_url'] = url_cloudinary
         
-        
+       
         producto_imagen = ProductoImagen.objects.using('mongo_db').create(**validated_data)
         
         return producto_imagen

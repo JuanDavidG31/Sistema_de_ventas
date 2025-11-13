@@ -1,7 +1,8 @@
 from django.db import models
 #from django.contrib.postgres.fields import JSONField  
 from django.utils import timezone
-
+from djongo import models as djongo_models 
+from djongo.models import ObjectIdField
 class Departamento(models.Model):
     nombre = models.CharField(max_length=100, unique=True)
     codigo = models.CharField(max_length=10, unique=True)
@@ -68,13 +69,17 @@ class Producto(models.Model):
     def __str__(self):
         return f"{self.nombre} ({self.codigo})"
 
-class ProductoImagen(models.Model):
+class ProductoImagen(djongo_models.Model): 
+    
+    
+    _id = ObjectIdField(primary_key=True) 
 
-    producto_id = models.IntegerField(
-        db_index=True, 
-        verbose_name="ID de Producto (MySQL)"
+    producto = models.ForeignKey(
+        'Producto', 
+        on_delete=models.CASCADE, 
+        db_column='producto_id', 
+        related_name='imagenes_mongo'
     )
-   
     imagen_url = models.URLField(
         max_length=500, 
         null=True, 
@@ -82,8 +87,12 @@ class ProductoImagen(models.Model):
         verbose_name="URL de Imagen Cloudinary"
     )
     
+    class Meta:
+        managed = False 
+        db_table = 'BACKVENTAS_productoimagen' 
+        
     def __str__(self):
-        return f"Imagen {self.id} - Producto ID {self.producto_id}"
+        return f"Imagen para Producto {self._id}"
 
 class Venta(models.Model):
     numero_factura = models.CharField(max_length=50, unique=True)
